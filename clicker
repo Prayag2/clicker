@@ -1,0 +1,39 @@
+#!/usr/bin/python
+import threading 
+from pymouse import PyMouseEvent
+import sys 
+from playsound import playsound
+
+click_one = "click.wav"
+click_two = "click2.wav"
+
+class Clicker(PyMouseEvent):
+    def __init__(self):
+        PyMouseEvent.__init__(self)
+
+    def play(self, path):
+        playsound(path)
+
+    def click(self, x, y, button, pressed):
+        if button == 1:
+            if pressed:
+                # os.system(f"mpv --no-video '{click_one}' --volume=50")
+                t = threading.Thread(target=self.play , kwargs={"path": click_one})
+                t.start()
+        elif button == 2:
+            if pressed:
+                # os.system(f"mpv --no-video '{click_two}' --volume=50")
+                t = threading.Thread(target=self.play , kwargs={"path": click_two})
+                t.start()
+        else:
+            if pressed:
+                t = threading.Thread(target=self.play, kwargs={"path": click_two})
+                t.start()
+
+try:
+    c = Clicker()
+    c.run()
+except KeyboardInterrupt:
+    print("\nBye.")
+    sys.exit(0)
+
